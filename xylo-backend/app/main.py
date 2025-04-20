@@ -35,7 +35,11 @@ app.add_middleware(
         "https://openhands-tool-tunnel-zwdi3ogg.devinapps.com",
         "https://user:ac39e2eb4b685a87ffcea7f146b83b66@openhands-tool-tunnel-zwdi3ogg.devinapps.com",
         "https://xylo-frontend-91n60f7jl-lightiams-projects.vercel.app",
-        "https://xylo-frontend.vercel.app"
+        "https://xylo-frontend.vercel.app",
+        "https://openhands-tool-x4f21wo6.devinapps.com",
+        "https://xylo-dev.vercel.app",
+        "https://xylo-dev-lightiam.vercel.app",
+        "https://xylodev.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
