@@ -13,10 +13,22 @@ export default defineConfig({
     'process.env': {}
   },
   server: {
-    allowedHosts: ["openhands-tool-tunnel-zwdi3ogg.devinapps.com"],
+    host: "0.0.0.0",
+    cors: true,
+    hmr: {
+      host: 'localhost'
+    },
+    strictPort: true,
+    proxy: {},
+    fs: {
+      strict: false
+    },
+    origin: 'http://localhost:5173',
   },
   preview: {
-    allowedHosts: ["openhands-tool-tunnel-x1qacw9e.devinapps.com", "openhands-tool-tunnel-zwdi3ogg.devinapps.com"],
+    host: "0.0.0.0",
+    port: 5173,
+    strictPort: true,
   },
 })
 
