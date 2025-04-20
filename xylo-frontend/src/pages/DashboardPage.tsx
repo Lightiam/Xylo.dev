@@ -5,10 +5,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs"
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Textarea } from "../components/ui/textarea";
-import { Code, Terminal, Globe, Cpu } from "lucide-react";
+import { Code, Terminal, Globe, Cpu, Check, GitBranch, TestTube, Rocket } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { chatService, ChatMessage, Model } from "../services/chat";
 import { useAuth } from "../App";
+import { Badge } from "../components/ui/badge";
 
 export function DashboardPage() {
   const [prompt, setPrompt] = useState("");
@@ -19,6 +20,12 @@ export function DashboardPage() {
   const [models, setModels] = useState<Model[]>([]);
   const [selectedModel, setSelectedModel] = useState("llama3-70b-8192");
   const [error, setError] = useState("");
+  const [activeAgents, setActiveAgents] = useState({
+    code: false,
+    git: false,
+    testing: false,
+    deployment: false
+  });
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
@@ -404,48 +411,100 @@ export function DashboardPage() {
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Code Agent</CardTitle>
+                  <Card className={activeAgents.code ? "border-2 border-blue-500" : ""}>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Code className="h-5 w-5 text-blue-500" />
+                        <CardTitle className="text-lg">Code Agent</CardTitle>
+                      </div>
+                      {activeAgents.code && (
+                        <Badge variant="outline" className="bg-blue-100 text-blue-800">
+                          <Check className="h-3 w-3 mr-1" /> Active
+                        </Badge>
+                      )}
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-500 mb-4">
                         Helps with code generation, refactoring, and debugging
                       </p>
-                      <Button>Activate</Button>
+                      <Button 
+                        onClick={() => setActiveAgents(prev => ({ ...prev, code: !prev.code }))}
+                        variant={activeAgents.code ? "outline" : "default"}
+                      >
+                        {activeAgents.code ? "Deactivate" : "Activate"}
+                      </Button>
                     </CardContent>
                   </Card>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Git Agent</CardTitle>
+                  <Card className={activeAgents.git ? "border-2 border-green-500" : ""}>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <GitBranch className="h-5 w-5 text-green-500" />
+                        <CardTitle className="text-lg">Git Agent</CardTitle>
+                      </div>
+                      {activeAgents.git && (
+                        <Badge variant="outline" className="bg-green-100 text-green-800">
+                          <Check className="h-3 w-3 mr-1" /> Active
+                        </Badge>
+                      )}
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-500 mb-4">
                         Assists with version control and GitHub operations
                       </p>
-                      <Button>Activate</Button>
+                      <Button 
+                        onClick={() => setActiveAgents(prev => ({ ...prev, git: !prev.git }))}
+                        variant={activeAgents.git ? "outline" : "default"}
+                      >
+                        {activeAgents.git ? "Deactivate" : "Activate"}
+                      </Button>
                     </CardContent>
                   </Card>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Testing Agent</CardTitle>
+                  <Card className={activeAgents.testing ? "border-2 border-purple-500" : ""}>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <TestTube className="h-5 w-5 text-purple-500" />
+                        <CardTitle className="text-lg">Testing Agent</CardTitle>
+                      </div>
+                      {activeAgents.testing && (
+                        <Badge variant="outline" className="bg-purple-100 text-purple-800">
+                          <Check className="h-3 w-3 mr-1" /> Active
+                        </Badge>
+                      )}
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-500 mb-4">
                         Generates and runs tests for your code
                       </p>
-                      <Button>Activate</Button>
+                      <Button 
+                        onClick={() => setActiveAgents(prev => ({ ...prev, testing: !prev.testing }))}
+                        variant={activeAgents.testing ? "outline" : "default"}
+                      >
+                        {activeAgents.testing ? "Deactivate" : "Activate"}
+                      </Button>
                     </CardContent>
                   </Card>
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Deployment Agent</CardTitle>
+                  <Card className={activeAgents.deployment ? "border-2 border-orange-500" : ""}>
+                    <CardHeader className="flex flex-row items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Rocket className="h-5 w-5 text-orange-500" />
+                        <CardTitle className="text-lg">Deployment Agent</CardTitle>
+                      </div>
+                      {activeAgents.deployment && (
+                        <Badge variant="outline" className="bg-orange-100 text-orange-800">
+                          <Check className="h-3 w-3 mr-1" /> Active
+                        </Badge>
+                      )}
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-gray-500 mb-4">
                         Helps with deploying your applications
                       </p>
-                      <Button>Activate</Button>
+                      <Button 
+                        onClick={() => setActiveAgents(prev => ({ ...prev, deployment: !prev.deployment }))}
+                        variant={activeAgents.deployment ? "outline" : "default"}
+                      >
+                        {activeAgents.deployment ? "Deactivate" : "Activate"}
+                      </Button>
                     </CardContent>
                   </Card>
                 </div>
