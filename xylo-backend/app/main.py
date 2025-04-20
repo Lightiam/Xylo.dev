@@ -44,11 +44,17 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
+    expose_headers=["*"],  # Expose all headers
+    max_age=600,  # Cache preflight requests for 10 minutes
 )
 
 @app.get("/healthz")
 async def healthz():
     return {"status": "ok"}
+
+@app.options("/api/auth/token")
+async def options_auth_token():
+    return {}
 
 @app.post("/api/auth/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
@@ -64,6 +70,10 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.email}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@app.options("/api/auth/register")
+async def options_auth_register():
+    return {}
 
 @app.post("/api/auth/register", response_model=User)
 async def register_user(user_data: UserCreate):
