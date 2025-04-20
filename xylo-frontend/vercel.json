@@ -10,7 +10,5 @@
   "framework": "vite",
   "github": {
     "silent": true
-  },
-  "cleanUrls": true,
-  "trailingSlash": false
+  }
 }
