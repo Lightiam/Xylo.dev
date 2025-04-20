@@ -1,0 +1,35 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [ main, devin/1745145655-initial-implementation ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: xylo-frontend/package-lock.json
+
+      - name: Install Dependencies
+        run: cd xylo-frontend && npm ci
+
+      - name: Build
+        run: cd xylo-frontend && npm run build
+        env:
+          VITE_API_URL: https://app-ntsxhmlq.fly.dev
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: xylo-frontend/dist
+          branch: gh-pages
