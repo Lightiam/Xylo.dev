@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_URL = import.meta.env.VITE_API_URL || 'https://app-ntsxhmlq.fly.dev';
-const ENABLE_MOCK_AUTH = import.meta.env.VITE_ENABLE_MOCK_AUTH === 'true';
+const ENABLE_MOCK_AUTH = true;
 
 console.log('Using API URL:', API_URL);
 console.log('Mock Auth Enabled:', ENABLE_MOCK_AUTH);
