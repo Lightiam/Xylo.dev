@@ -1,0 +1,10 @@
+/* Hide Vercel branding */
+[aria-label="Vercel Logo"],
+[href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"],
+a[target="_blank"][rel="noopener noreferrer"][href^="https://vercel.com"],
+a[href^="https://vercel.com"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
