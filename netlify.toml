@@ -1,0 +1,12 @@
+[build]
+  base = "xylo-frontend/"
+  publish = "xylo-frontend/dist/"
+  command = "npm run build"
+
+[build.environment]
+  VITE_API_URL = "https://app-ntsxhmlq.fly.dev"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
