@@ -1,92 +1,19 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { Layout } from "../components/layout/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../components/ui/tabs";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import { Textarea } from "../components/ui/textarea";
 import { Code, Terminal, Globe, Cpu, Check, GitBranch, TestTube, Rocket } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
-import { chatService, ChatMessage, Model } from "../services/chat";
-import { useAuth } from "../App";
 import { Badge } from "../components/ui/badge";
 
 export function DashboardPage() {
-  const [prompt, setPrompt] = useState("");
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "system", content: "Welcome to Xylo.dev! How can I help you today?" }
-  ]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [models, setModels] = useState<Model[]>([]);
-  const [selectedModel, setSelectedModel] = useState("llama3-70b-8192");
-  const [error, setError] = useState("");
   const [activeAgents, setActiveAgents] = useState({
     code: false,
     git: false,
     testing: false,
     deployment: false
   });
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    const fetchModels = async () => {
-      try {
-        const modelList = await chatService.getModels();
-        setModels(modelList);
-        if (modelList.length > 0) {
-          setSelectedModel(modelList[0].id);
-        }
-      } catch (err) {
-        console.error("Failed to fetch models:", err);
-        setError("Failed to load available models. Please try again later.");
-      }
-    };
-
-    if (isAuthenticated) {
-      fetchModels();
-    }
-  }, [isAuthenticated]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!prompt.trim() || isLoading) return;
-
-    const userMessage = { role: "user", content: prompt };
-    setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
-    setError("");
-    setPrompt("");
-    
-    try {
-      const messagesToSend = [...messages.filter(m => m.role !== "system"), userMessage];
-      
-      const response = await chatService.sendMessage({
-        messages: messagesToSend,
-        model: selectedModel
-      });
-      
-      setMessages(prev => [
-        ...prev,
-        { 
-          role: "assistant", 
-          content: response.content
-        }
-      ]);
-    } catch (err: any) {
-      console.error("Chat error:", err);
-      setError(err.response?.data?.detail || "Failed to get a response. Please try again.");
-      
-      setMessages(prev => [
-        ...prev,
-        { 
-          role: "assistant", 
-          content: "I'm sorry, I encountered an error while processing your request. Please try again later." 
-        }
-      ]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Layout>
@@ -114,184 +41,178 @@ export function DashboardPage() {
           </TabsList>
           
           <TabsContent value="chat" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2">
-                <Card className="h-[600px] flex flex-col">
-                  <CardHeader>
-                    <CardTitle>AI Assistant</CardTitle>
-                    <CardDescription>
-                      Chat with your AI development assistant
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex-1 overflow-auto flex flex-col">
-                    <div className="mb-4">
-                      <div className="flex items-center gap-2">
-                        <Select value={selectedModel} onValueChange={setSelectedModel}>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select a model" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {models.map((model) => (
-                              <SelectItem key={model.id} value={model.id}>
-                                {model.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                    </div>
-                    
-                    <div className="flex-1 space-y-4 mb-4 overflow-auto">
-                      {messages.map((message, index) => (
-                        <div
-                          key={index}
-                          className={`flex ${
-                            message.role === "user" ? "justify-end" : "justify-start"
-                          }`}
-                        >
-                          <div
-                            className={`max-w-[80%] rounded-lg px-4 py-2 ${
-                              message.role === "user"
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-100 text-gray-800"
-                            }`}
-                          >
-                            {message.content}
-                          </div>
-                        </div>
-                      ))}
-                      
-                      {isLoading && (
-                        <div className="flex justify-start">
-                          <div className="max-w-[80%] rounded-lg px-4 py-2 bg-gray-100 text-gray-800">
-                            <div className="flex space-x-2">
-                              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
-                              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce delay-100"></div>
-                              <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce delay-200"></div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      
-                      {error && (
-                        <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-                          {error}
-                        </div>
-                      )}
-                    </div>
-                    
-                    <form onSubmit={handleSubmit} className="flex gap-2">
-                      <Textarea
-                        value={prompt}
-                        onChange={(e) => setPrompt(e.target.value)}
-                        placeholder="Type your message here..."
-                        className="flex-1 resize-none"
-                        disabled={isLoading}
-                      />
-                      <Button type="submit" disabled={isLoading}>
-                        {isLoading ? "Sending..." : "Send"}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
+            <div className="flex h-[600px] border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden">
+              {/* VS Code-like top menu bar */}
+              <div className="absolute top-0 left-0 right-0 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 py-1 flex items-center text-sm">
+                <div className="flex space-x-4">
+                  <span className="text-gray-700 dark:text-gray-300">File</span>
+                  <span className="text-gray-700 dark:text-gray-300">Edit</span>
+                  <span className="text-gray-700 dark:text-gray-300">Selection</span>
+                  <span className="text-gray-700 dark:text-gray-300">View</span>
+                  <span className="text-gray-700 dark:text-gray-300">Go</span>
+                  <span className="text-gray-700 dark:text-gray-300">Run</span>
+                </div>
+                <div className="ml-auto flex items-center">
+                  <Input 
+                    placeholder="emilist-dreamteam-finder" 
+                    className="h-7 text-xs bg-gray-200 dark:bg-gray-700 border-0"
+                  />
+                </div>
               </div>
-              <div>
-                <Card className="h-[600px]">
-                  <CardHeader>
-                    <CardTitle>Project Files</CardTitle>
-                    <CardDescription>
-                      Your project files and directories
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-4 w-4"
-                        >
-                          <path d="M2 9V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1" />
+              
+              {/* VS Code-like file explorer */}
+              <div className="w-64 bg-gray-100 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+                <div className="p-2 text-sm font-medium text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                  EXPLORER
+                </div>
+                <div className="p-2">
+                  <div className="mb-2">
+                    <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 rotate-90">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                      <span>OPEN EDITORS</span>
+                    </div>
+                  </div>
+                  <div className="mb-2">
+                    <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 rotate-90">
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                      <span>EMILIST-DREAMTEAM-FINDER</span>
+                    </div>
+                    <div className="ml-4 mt-1">
+                      <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                          <polyline points="9 18 15 12 9 6" />
                         </svg>
-                        <span>src</span>
+                        <span>.qodo</span>
                       </div>
-                      <div className="flex items-center gap-2 pl-6">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-4 w-4"
-                        >
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                          <polyline points="14 2 14 8 20 8" />
-                          <path d="M9 15h6" />
-                          <path d="M9 11h6" />
-                        </svg>
-                        <span>main.js</span>
-                      </div>
-                      <div className="flex items-center gap-2 pl-6">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-4 w-4"
-                        >
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                          <polyline points="14 2 14 8 20 8" />
-                          <path d="M9 15h6" />
-                          <path d="M9 11h6" />
-                        </svg>
-                        <span>index.html</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-4 w-4"
-                        >
-                          <path d="M2 9V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1" />
+                      <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                          <polyline points="9 18 15 12 9 6" />
                         </svg>
                         <span>public</span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="h-4 w-4"
-                        >
-                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                          <polyline points="14 2 14 8 20 8" />
-                          <path d="M9 15h6" />
-                          <path d="M9 11h6" />
+                      <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 rotate-90">
+                          <polyline points="9 18 15 12 9 6" />
                         </svg>
-                        <span>package.json</span>
+                        <span>src</span>
+                      </div>
+                      <div className="ml-4">
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                          <span>components</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                          <span>hooks</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                          <span>lib</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                          <span>pages</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                          <span>services</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                          <span>utils</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <span className="text-blue-500 mr-1">#</span>
+                          <span>App.css</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <span className="text-orange-500 mr-1">📄</span>
+                          <span>App.tsx</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <span className="text-blue-500 mr-1">#</span>
+                          <span>index.css</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <span className="text-orange-500 mr-1">📄</span>
+                          <span>main.tsx</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                          <span className="text-orange-500 mr-1">📄</span>
+                          <span>vite-env.d.ts</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                        <span className="text-gray-500 mr-1">◇</span>
+                        <span>.gitignore</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                        <span className="text-gray-500 mr-1">≡</span>
+                        <span>bun.lockb</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                        <span className="text-yellow-500 mr-1">{ }</span>
+                        <span>components.json</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                        <span className="text-blue-500 mr-1">◉</span>
+                        <span>eslint.config.js</span>
+                      </div>
+                      <div className="flex items-center gap-1 text-sm text-gray-700 dark:text-gray-300 py-1">
+                        <span className="text-orange-500 mr-1">◇</span>
+                        <span>index.html</span>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Main content area */}
+              <div className="flex-1 flex flex-col">
+                <div className="flex-1 bg-white dark:bg-gray-900 p-4">
+                  <div className="flex flex-col h-full">
+                    <div className="flex-1 flex items-center justify-center">
+                      <div className="text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="h-32 w-32 mx-auto text-gray-300 dark:text-gray-700">
+                          <path d="M18 6 6 18M6 6l12 12" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Terminal area */}
+                <div className="h-64 border-t border-gray-200 dark:border-gray-700">
+                  <div className="flex text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
+                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">PROBLEMS</div>
+                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700">OUTPUT</div>
+                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">TERMINAL</div>
+                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700">DEBUG CONSOLE</div>
+                    <div className="px-4 py-1">PORTS</div>
+                  </div>
+                  <div className="bg-black text-green-400 p-2 font-mono text-xs h-full overflow-auto">
+                    <div className="flex items-center">
+                      <span className="text-blue-400 mr-2">$</span>
+                      <span>Looking for remote tunnel</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </TabsContent>
@@ -368,6 +289,27 @@ export function DashboardPage() {
                       <span className="text-blue-400 mr-2">xylo@dev:~/project$</span>
                       <span className="animate-pulse">_</span>
                     </div>
+                  </div>
+                </div>
+                <div className="flex border-t border-gray-700">
+                  <div className="flex text-xs bg-gray-800 text-gray-300">
+                    <div className="px-4 py-1 border-r border-gray-700 bg-gray-900 text-white">PROBLEMS</div>
+                    <div className="px-4 py-1 border-r border-gray-700">OUTPUT</div>
+                    <div className="px-4 py-1 border-r border-gray-700 bg-gray-900 text-white">TERMINAL</div>
+                    <div className="px-4 py-1 border-r border-gray-700">DEBUG CONSOLE</div>
+                    <div className="px-4 py-1">PORTS</div>
+                  </div>
+                  <div className="ml-auto flex items-center px-2 text-gray-400">
+                    <Button variant="ghost" size="icon" className="h-6 w-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    </Button>
+                    <Button variant="ghost" size="icon" className="h-6 w-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                        <path d="m18 15-6-6-6 6" />
+                      </svg>
+                    </Button>
                   </div>
                 </div>
                 <div className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
