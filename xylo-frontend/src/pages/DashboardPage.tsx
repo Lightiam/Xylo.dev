@@ -297,26 +297,91 @@ export function DashboardPage() {
           </TabsContent>
           
           <TabsContent value="terminal">
-            <Card className="h-[600px]">
-              <CardHeader>
-                <CardTitle>Terminal</CardTitle>
-                <CardDescription>
+            <Card className="h-[600px] flex flex-col">
+              <CardHeader className="pb-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Terminal className="h-5 w-5 text-gray-500" />
+                    <CardTitle>Terminal</CardTitle>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button variant="outline" size="icon" className="h-6 w-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                        <path d="M16 16h.01" />
+                      </svg>
+                    </Button>
+                    <Button variant="outline" size="icon" className="h-6 w-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                        <path d="M18 6 6 18" />
+                        <path d="m6 6 12 12" />
+                      </svg>
+                    </Button>
+                  </div>
+                </div>
+                <CardDescription className="text-xs">
                   Run commands in a secure sandbox environment
                 </CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="bg-black text-green-400 p-4 rounded-md h-[450px] font-mono text-sm overflow-auto">
-                  <div>$ ls -la</div>
-                  <div>total 24</div>
-                  <div>drwxr-xr-x 4 user user 4096 Apr 20 00:00 .</div>
-                  <div>drwxr-xr-x 3 user user 4096 Apr 20 00:00 ..</div>
-                  <div>-rw-r--r-- 1 user user  125 Apr 20 00:00 index.html</div>
-                  <div>-rw-r--r-- 1 user user  250 Apr 20 00:00 main.js</div>
-                  <div>-rw-r--r-- 1 user user  350 Apr 20 00:00 package.json</div>
-                  <div>$ _</div>
+              <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
+                <div className="flex items-center bg-gray-100 dark:bg-gray-800 px-4 py-1 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-1.5">
+                    <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                    <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
+                    <div className="h-3 w-3 rounded-full bg-green-500"></div>
+                  </div>
+                  <div className="flex-1 text-center text-xs text-gray-500">xylo@dev:~/project</div>
                 </div>
-                <div className="mt-4">
-                  <Input placeholder="Enter command..." />
+                <div className="bg-black text-green-400 p-4 font-mono text-sm flex-1 overflow-auto">
+                  <div className="flex flex-col gap-0.5">
+                    <div className="flex">
+                      <span className="text-blue-400 mr-2">xylo@dev:~$</span>
+                      <span>ls -la</span>
+                    </div>
+                    <div>total 24</div>
+                    <div>drwxr-xr-x 4 xylo dev 4096 Apr 20 00:00 .</div>
+                    <div>drwxr-xr-x 3 xylo dev 4096 Apr 20 00:00 ..</div>
+                    <div>-rw-r--r-- 1 xylo dev  125 Apr 20 00:00 index.html</div>
+                    <div>-rw-r--r-- 1 xylo dev  250 Apr 20 00:00 main.js</div>
+                    <div>-rw-r--r-- 1 xylo dev  350 Apr 20 00:00 package.json</div>
+                    <div className="flex">
+                      <span className="text-blue-400 mr-2">xylo@dev:~$</span>
+                      <span>cd project</span>
+                    </div>
+                    <div className="flex">
+                      <span className="text-blue-400 mr-2">xylo@dev:~/project$</span>
+                      <span>npm install</span>
+                    </div>
+                    <div>added 1250 packages, and audited 1251 packages in 3s</div>
+                    <div>125 packages are looking for funding</div>
+                    <div className="text-yellow-400">10 moderate severity vulnerabilities</div>
+                    <div className="flex">
+                      <span className="text-blue-400 mr-2">xylo@dev:~/project$</span>
+                      <span>npm run dev</span>
+                    </div>
+                    <div className="text-cyan-400">{'>'} project@0.1.0 dev</div>
+                    <div className="text-cyan-400">{'>'} vite</div>
+                    <div className="text-purple-400">VITE v5.0.0 ready in 150 ms</div>
+                    <div className="text-white">➜ Local: http://localhost:5173/</div>
+                    <div className="text-gray-400">➜ Network: use --host to expose</div>
+                    <div className="flex">
+                      <span className="text-blue-400 mr-2">xylo@dev:~/project$</span>
+                      <span className="animate-pulse">_</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                  <span className="text-blue-500 mr-2">$</span>
+                  <Input 
+                    placeholder="Enter command..." 
+                    className="border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+                  />
+                  <Button size="sm" variant="ghost" className="ml-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                      <polyline points="9 10 4 15 9 20" />
+                      <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+                    </svg>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
