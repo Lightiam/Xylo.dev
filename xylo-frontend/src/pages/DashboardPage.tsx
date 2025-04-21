@@ -200,17 +200,74 @@ export function DashboardPage() {
                 {/* Terminal area */}
                 <div className="h-64 border-t border-gray-200 dark:border-gray-700">
                   <div className="flex text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-b border-gray-200 dark:border-gray-700">
-                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">PROBLEMS</div>
-                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700">OUTPUT</div>
-                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">TERMINAL</div>
-                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700">DEBUG CONSOLE</div>
-                    <div className="px-4 py-1">PORTS</div>
-                  </div>
-                  <div className="bg-black text-green-400 p-2 font-mono text-xs h-full overflow-auto">
-                    <div className="flex items-center">
-                      <span className="text-blue-400 mr-2">$</span>
-                      <span>Looking for remote tunnel</span>
+                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 cursor-pointer">PROBLEMS</div>
+                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700 cursor-pointer">OUTPUT</div>
+                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 cursor-pointer">TERMINAL</div>
+                    <div className="px-4 py-1 border-r border-gray-200 dark:border-gray-700 cursor-pointer">DEBUG CONSOLE</div>
+                    <div className="px-4 py-1 cursor-pointer">PORTS</div>
+                    <div className="ml-auto flex items-center px-2 text-gray-400">
+                      <Button variant="ghost" size="icon" className="h-6 w-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                          <path d="M12 5v14M5 12h14" />
+                        </svg>
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-6 w-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3">
+                          <path d="m18 15-6-6-6 6" />
+                        </svg>
+                      </Button>
                     </div>
+                  </div>
+                  <div className="bg-black text-green-400 p-2 font-mono text-xs h-[calc(100%-28px)] overflow-auto">
+                    <div className="flex flex-col gap-0.5">
+                      <div className="flex">
+                        <span className="text-blue-400 mr-2">xylo@dev:~$</span>
+                        <span>ls -la</span>
+                      </div>
+                      <div>total 24</div>
+                      <div>drwxr-xr-x 4 xylo dev 4096 Apr 20 00:00 .</div>
+                      <div>drwxr-xr-x 3 xylo dev 4096 Apr 20 00:00 ..</div>
+                      <div>-rw-r--r-- 1 xylo dev  125 Apr 20 00:00 index.html</div>
+                      <div>-rw-r--r-- 1 xylo dev  250 Apr 20 00:00 main.js</div>
+                      <div>-rw-r--r-- 1 xylo dev  350 Apr 20 00:00 package.json</div>
+                      <div className="flex">
+                        <span className="text-blue-400 mr-2">xylo@dev:~$</span>
+                        <span>cd project</span>
+                      </div>
+                      <div className="flex">
+                        <span className="text-blue-400 mr-2">xylo@dev:~/project$</span>
+                        <span>npm install</span>
+                      </div>
+                      <div>added 1250 packages, and audited 1251 packages in 3s</div>
+                      <div>125 packages are looking for funding</div>
+                      <div className="text-yellow-400">10 moderate severity vulnerabilities</div>
+                      <div className="flex">
+                        <span className="text-blue-400 mr-2">xylo@dev:~/project$</span>
+                        <span>npm run dev</span>
+                      </div>
+                      <div className="text-cyan-400">{'>'} project@0.1.0 dev</div>
+                      <div className="text-cyan-400">{'>'} vite</div>
+                      <div className="text-purple-400">VITE v5.0.0 ready in 150 ms</div>
+                      <div className="text-white">➜ Local: http://localhost:5173/</div>
+                      <div className="text-gray-400">➜ Network: use --host to expose</div>
+                      <div className="flex">
+                        <span className="text-blue-400 mr-2">xylo@dev:~/project$</span>
+                        <span className="animate-pulse">_</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                    <span className="text-blue-500 mr-2">$</span>
+                    <Input 
+                      placeholder="Enter command..." 
+                      className="border-0 shadow-none focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
+                    />
+                    <Button size="sm" variant="ghost" className="ml-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                        <polyline points="9 10 4 15 9 20" />
+                        <path d="M20 4v7a4 4 0 0 1-4 4H4" />
+                      </svg>
+                    </Button>
                   </div>
                 </div>
               </div>

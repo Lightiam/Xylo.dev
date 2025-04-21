@@ -24,6 +24,7 @@ export default defineConfig({
       strict: false
     },
     origin: 'http://localhost:5173',
+    allowedHosts: ["openhands-tool-tunnel-qfscooi0.devinapps.com"],
   },
   preview: {
     host: "0.0.0.0",
